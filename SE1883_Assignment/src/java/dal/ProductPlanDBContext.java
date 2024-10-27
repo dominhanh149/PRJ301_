@@ -35,22 +35,21 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
                     + "           ,?\n"
                     + "           ,?\n"
                     + "           ,?)";
-            
+
             PreparedStatement stm_insert_plan = connection.prepareStatement(sql_insert_plan);
             stm_insert_plan.setString(1, model.getName());
             stm_insert_plan.setDate(2, model.getStart());
             stm_insert_plan.setDate(3, model.getEnd());
             stm_insert_plan.setInt(4, model.getDept().getId());
             stm_insert_plan.executeUpdate();
-            
+
             String sql_select_plan = "SELECT @@IDENTITY as plid";
             PreparedStatement stm_select_plan = connection.prepareStatement(sql_select_plan);
             ResultSet rs = stm_select_plan.executeQuery();
-            if(rs.next())
-            {
+            if (rs.next()) {
                 model.setId(rs.getInt("plid"));
             }
-            
+
             String sql_insert_header = "INSERT INTO [PlanHeaders]\n"
                     + "           ([plid]\n"
                     + "           ,[pid]\n"
@@ -61,7 +60,7 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
                     + "           ,?\n"
                     + "           ,?\n"
                     + "           ,?)";
-            
+
             for (ProductPlanHeader header : model.getHeaders()) {
                 PreparedStatement stm_insert_header = connection.prepareStatement(sql_insert_header);
                 stm_insert_header.setInt(1, model.getId());
@@ -106,12 +105,90 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
 
     @Override
     public ArrayList<ProductPlan> list() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql = "SELECT p.plid, p.plname, p.startdate, p.enddate, d.did, d.dname, d.type, ph.phid, ph.pid, ph.quantity, ph.estimatedeffort, pr.pname, pr.description "
+                + "FROM Plans p "
+                + "JOIN Departments d ON p.did = d.did "
+                + "LEFT JOIN PlanHeaders ph ON p.plid = ph.plid "
+                + "LEFT JOIN Products pr ON ph.pid = pr.pid "
+                + "ORDER BY p.plid";
+        ArrayList<ProductPlan> plans = new ArrayList<>();
 
+        PreparedStatement ps = null;
+        
+
+        try {
+
+            ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            ProductPlan currentPlan = null;
+            while (rs.next()) {
+                int plid = rs.getInt("plid");
+
+                if (currentPlan == null || currentPlan.getId()!= plid) {
+                    // Add the previous plan to the list if it's not null
+                    if (currentPlan != null) {
+                        plans.add(currentPlan);
+                    }
+                    // Create a new ProductionPlan object
+                    currentPlan = new ProductPlan();
+                    currentPlan.setId(plid);
+                    currentPlan.setName(rs.getString("plname"));
+                    currentPlan.setStart(rs.getDate("startdate"));
+                    currentPlan.setEnd(rs.getDate("enddate"));
+
+                    // Create and set Department object
+                    Department department = new Department();
+                    department.setId(rs.getInt("did"));
+                    department.setName(rs.getString("dname"));
+                    department.setType(rs.getString("type"));
+                    currentPlan.setDept(department);
+
+                    currentPlan.setHeaders(new ArrayList<>());
+                }
+
+                // Check if PlanHeader exists
+                int phid = rs.getInt("phid");
+                if (phid != 0) {
+                    // Create a new PlanHeader object and add it to the current plan
+                    ProductPlanHeader header = new ProductPlanHeader();
+                    header.setId(phid);
+                    header.setQuantity(rs.getInt("quantity"));
+                    header.setEstimatedeffort(rs.getFloat("estimatedeffort"));
+
+                    // Create a new Product object and set it in the header
+                    Product product = new Product();
+                    product.setId(rs.getInt("pid"));
+                    product.setName(rs.getString("pname"));
+                    product.setDescription(rs.getString("description"));
+                    header.setProduct(product);
+                    header.setPlan(currentPlan);
+                   
+                    // Add the header to the current plan
+                    currentPlan.getHeaders().add(header);
+                }
+            }
+
+        
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                ps.close();
+                connection.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductPlanDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return plans;
     }
 
-    @Override
-    public ProductPlan get(int id) {
+
+
+@Override
+public ProductPlan get(int id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
