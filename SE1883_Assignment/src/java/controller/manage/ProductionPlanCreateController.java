@@ -87,7 +87,7 @@ public class ProductionPlanCreateController extends HttpServlet {
         {
             ProductPlanDBContext db = new ProductPlanDBContext();
             db.insert(plan);
-            response.getWriter().println("your plan has been added!");
+            response.sendRedirect("list");
         }
         else
         {

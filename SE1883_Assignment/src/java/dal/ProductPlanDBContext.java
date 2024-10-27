@@ -126,8 +126,7 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
             while (rs.next()) {
                 int plid = rs.getInt("plid");
 
-                if (currentPlan.getId()!= plid) {
-                    // Add the previous plan to the list if it's not null
+                if ( currentPlan.getId()!= plid) {
                     
                     // Create a new ProductionPlan object
                     currentPlan = new ProductPlan();
@@ -142,9 +141,8 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
                     department.setName(rs.getString("dname"));
                     department.setType(rs.getString("type"));
                     currentPlan.setDept(department);
-                    
-                    currentPlan.setHeaders(new ArrayList<>());
                     plans.add(currentPlan);
+                    currentPlan.setHeaders(new ArrayList<>());
                 }
 
                 // Check if PlanHeader exists
