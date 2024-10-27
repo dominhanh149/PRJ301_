@@ -105,11 +105,11 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
 
     @Override
     public ArrayList<ProductPlan> list() {
-        String sql = "SELECT p.plid, p.plname, p.startdate, p.enddate, d.did, d.dname, d.type, ph.phid, ph.pid, ph.quantity, ph.estimatedeffort, pr.pname, pr.description "
+        String sql = "SELECT p.plid, p.plname, p.startdate, p.enddate, d.did, d.dname, d.type, ph.phid, pr.pid, ph.quantity, ph.estimatedeffort, pr.pname, pr.description "
                 + "FROM Plans p "
                 + "JOIN Departments d ON p.did = d.did "
-                + "LEFT JOIN PlanHeaders ph ON p.plid = ph.plid "
-                + "LEFT JOIN Products pr ON ph.pid = pr.pid "
+                + "JOIN PlanHeaders ph ON p.plid = ph.plid "
+                + "JOIN Products pr ON ph.pid = pr.pid "
                 + "ORDER BY p.plid";
         ArrayList<ProductPlan> plans = new ArrayList<>();
 
@@ -121,15 +121,14 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
             ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
-            ProductPlan currentPlan = null;
+            ProductPlan currentPlan = new ProductPlan();
+            currentPlan.setId(-1);
             while (rs.next()) {
                 int plid = rs.getInt("plid");
 
-                if (currentPlan == null || currentPlan.getId()!= plid) {
+                if (currentPlan.getId()!= plid) {
                     // Add the previous plan to the list if it's not null
-                    if (currentPlan != null) {
-                        plans.add(currentPlan);
-                    }
+                    
                     // Create a new ProductionPlan object
                     currentPlan = new ProductPlan();
                     currentPlan.setId(plid);
@@ -143,8 +142,9 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
                     department.setName(rs.getString("dname"));
                     department.setType(rs.getString("type"));
                     currentPlan.setDept(department);
-
+                    
                     currentPlan.setHeaders(new ArrayList<>());
+                    plans.add(currentPlan);
                 }
 
                 // Check if PlanHeader exists

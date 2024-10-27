@@ -44,7 +44,7 @@ public class ProductionPlanCreateController extends HttpServlet {
         request.setAttribute("depts", dbDept.get("Production"));
         request.setAttribute("products", dbProduct.list());
         
-        request.getRequestDispatcher("../view/productionplan/create.jsp").forward(request, response);
+        request.getRequestDispatcher("../view/productionPlan/create.jsp").forward(request, response);
     } 
 
     /** 
