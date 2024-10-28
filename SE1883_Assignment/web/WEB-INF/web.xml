@@ -16,6 +16,10 @@
         <servlet-name>ProductionPlanDeleteController</servlet-name>
         <servlet-class>controller.manage.ProductionPlanDeleteController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ProductionPlanUpdate</servlet-name>
+        <servlet-class>controller.manage.ProductionPlanUpdate</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ProductionPlanCreateController</servlet-name>
         <url-pattern>/productionPlan/create</url-pattern>
@@ -31,5 +35,9 @@
     <servlet-mapping>
         <servlet-name>ProductionPlanDeleteController</servlet-name>
         <url-pattern>/productionPlan/delete</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductionPlanUpdate</servlet-name>
+        <url-pattern>/productionPlan/update</url-pattern>
     </servlet-mapping>
 </web-app>

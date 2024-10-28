@@ -5,7 +5,6 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Create Production Plan</title>
-        <link rel="stylesheet" href="styles.css">
         <style>
             body {
                 font-family: Arial, sans-serif;

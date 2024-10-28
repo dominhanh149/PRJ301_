@@ -95,7 +95,59 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
 
     @Override
     public void update(ProductPlan model) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            connection.setAutoCommit(false);
+
+            // Update the main Plan record
+            String sql_update_plan = "UPDATE [Plans] SET [plname] = ?, [startdate] = ?, [enddate] = ?, [did] = ? WHERE [plid] = ?";
+            PreparedStatement stm_update_plan = connection.prepareStatement(sql_update_plan);
+            stm_update_plan.setString(1, model.getName());
+            stm_update_plan.setDate(2, model.getStart());
+            stm_update_plan.setDate(3, model.getEnd());
+            stm_update_plan.setInt(4, model.getDept().getId());
+            stm_update_plan.setInt(5, model.getId());
+            stm_update_plan.executeUpdate();
+
+            // Update or insert headers
+            String sql_update_header = "UPDATE [PlanHeaders] SET [quantity] = ?, [estimatedeffort] = ? WHERE [plid] = ? AND [pid] = ?";
+            for (ProductPlanHeader header : model.getHeaders()) {
+                PreparedStatement stm_update_header = connection.prepareStatement(sql_update_header);
+                stm_update_header.setInt(1, header.getQuantity());
+                stm_update_header.setFloat(2, header.getEstimatedeffort());
+                stm_update_header.setInt(3, model.getId());
+                stm_update_header.setInt(4, header.getProduct().getId());
+
+                // Execute the update
+                int rowsAffected = stm_update_header.executeUpdate();
+
+                // If no rows were updated, insert the header
+                if (rowsAffected == 0) {
+                    String sql_insert_header = "INSERT INTO [PlanHeaders] ([plid], [pid], [quantity], [estimatedeffort]) VALUES (?, ?, ?, ?)";
+                    PreparedStatement stm_insert_header = connection.prepareStatement(sql_insert_header);
+                    stm_insert_header.setInt(1, model.getId());
+                    stm_insert_header.setInt(2, header.getProduct().getId());
+                    stm_insert_header.setInt(3, header.getQuantity());
+                    stm_insert_header.setFloat(4, header.getEstimatedeffort());
+                    stm_insert_header.executeUpdate();
+                }
+            }
+
+            connection.commit();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductPlanDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                connection.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ProductPlanDBContext.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+                connection.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductPlanDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     @Override
@@ -114,7 +166,6 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
         ArrayList<ProductPlan> plans = new ArrayList<>();
 
         PreparedStatement ps = null;
-        
 
         try {
 
@@ -126,8 +177,8 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
             while (rs.next()) {
                 int plid = rs.getInt("plid");
 
-                if ( currentPlan.getId()!= plid) {
-                    
+                if (currentPlan.getId() != plid) {
+
                     // Create a new ProductionPlan object
                     currentPlan = new ProductPlan();
                     currentPlan.setId(plid);
@@ -161,14 +212,12 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
                     product.setDescription(rs.getString("description"));
                     header.setProduct(product);
                     header.setPlan(currentPlan);
-                   
+
                     // Add the header to the current plan
                     currentPlan.getHeaders().add(header);
                 }
             }
 
-        
-            
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -183,10 +232,8 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
         return plans;
     }
 
-
-
-@Override
-public ProductPlan get(int id) {
+    @Override
+    public ProductPlan get(int id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

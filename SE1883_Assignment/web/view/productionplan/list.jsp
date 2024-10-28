@@ -88,7 +88,9 @@
                                             ${ph.quantity} </br>
                                         </c:forEach>
                                     </td>
-
+                                    <td>
+                                        <a href="update?plid=${pl.id}">Update</a>
+                                    </td>
                                     
                                 </tr>
                             </c:forEach>
