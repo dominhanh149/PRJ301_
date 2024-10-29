@@ -52,7 +52,7 @@ public class ProductPlanHeaderDBContext extends DBContext<ProductPlanHeader>{
                 + "JOIN Departments d ON p.did = d.did "
                 + "JOIN PlanHeaders ph ON p.plid = ph.plid "
                 + "JOIN Products pr ON ph.pid = pr.pid "
-                + "ORDER BY p.plid";
+                + "where p.plid = ?";
         ArrayList<ProductPlan> plans = new ArrayList<>();
 
         PreparedStatement ps = null;

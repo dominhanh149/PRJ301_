@@ -82,6 +82,7 @@
         <h1>Update Production Plan</h1>
         
         <form id="updatePlanForm" action="update" method="POST">
+            <input type="hidden" name="plid" value="${requestScope.plan.id}" />
             <!-- Plan Name -->
             <label for="name">Plan Name:</label>
             <input type="text" id="name" name="name" value="${requestScope.plan.name}" required/> <br/>
@@ -98,7 +99,7 @@
             <label for="did">Workshop:</label>
             <select id="did" name="did" required>
                 <c:forEach items="${requestScope.depts}" var="d">
-                    <option value="${d.id}" ${d.id == requestScope.plan.dept.id ? "selected" : ""}>${d.name}</option>
+                    <option value="${d.id}" ${d.id eq requestScope.plan.dept.id ? "selected" : ""}>${d.name}</option>
                 </c:forEach>
             </select>
             
@@ -112,13 +113,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${requestScope.products}" var="p">
-                        <tr>
-                            <td>${p.name}<input type="hidden" name="pid" value="${p.id}"></td>
-                            <td><input type="text" name="quantity${p.id}" value="<c:forEach items="${requestScope.headers}" var="header"><c:if test="${header.product.id == p.id}">${header.quantity}</c:if></c:forEach>" /></td>
-                            <td><input type="text" name="effort${p.id}" value="<c:forEach items="${requestScope.headers}" var="header"><c:if test="${header.product.id == p.id}">${header.estimatedEffort}</c:if></c:forEach>" /></td>
-                        </tr>
-                    </c:forEach>
+                    <c:forEach items="${requestScope.products}" var="p" varStatus="status">
+                                    <c:set value="${requestScope.plan.headers}" var="h"/>
+                                        <tr>
+                                            <td>${p.name}<input type="hidden" name="pid" value="${p.id}"></td>
+                                            <td><input type="text" name="quantity${p.id}" value="${h[status.index].quantity}"/></td>
+                                            <td><input type="text" name="effort${p.id}" value="${h[status.index].estimatedeffort}"/></td>
+                                        </tr>   
+                                </c:forEach>
                 </tbody>
             </table>
             

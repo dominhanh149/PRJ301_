@@ -30,10 +30,16 @@ public class ProductionPlanUpdate extends BaseRBACController {
 
     @Override
     protected void doAuthorizedGet(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
-
+        ProductPlanHeaderDBContext pdb = new ProductPlanHeaderDBContext();
         DepartmentDBContext dbDept = new DepartmentDBContext();
         ProductDBContext dbProduct = new ProductDBContext();
-        
+        String plid_raw = req.getParameter("plid");
+        int plid = -1;
+        if (plid_raw != null) {
+            plid = Integer.parseInt(plid_raw);
+        }
+
+        req.setAttribute("plan", pdb.listHeaders(plid).get(0));
         req.setAttribute("depts", dbDept.get("Production"));
         req.setAttribute("products", dbProduct.list());
 
@@ -43,6 +49,7 @@ public class ProductionPlanUpdate extends BaseRBACController {
     @Override
     protected void doAuthorizedPost(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
         ProductPlan plan = new ProductPlan();
+        plan.setId(Integer.parseInt(req.getParameter("plid")));
         plan.setName(req.getParameter("name"));
         plan.setStart(Date.valueOf(req.getParameter("from")));
         plan.setEnd(Date.valueOf(req.getParameter("to")));
