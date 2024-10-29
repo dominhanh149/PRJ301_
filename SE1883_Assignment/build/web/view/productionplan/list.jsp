@@ -55,6 +55,11 @@
             function redirectToCreatePlan() {
                 window.location.href = 'create';
             }
+            function confirmDelete(planId) {
+                if (confirm("Are you sure you want to delete this plan?")) {
+                    window.location.href = 'deleteProductPlan?planId=' + planId;
+                }
+            }
         </script>
     </head>
     <body>
@@ -90,6 +95,7 @@
                                     </td>
                                     <td>
                                         <a href="update?plid=${pl.id}">Update</a>
+                                        <a href="delete?plid=${pl.id}" onclick="confirmDelete(${pl.id});">Delete</a>
                                     </td>
                                     
                                 </tr>

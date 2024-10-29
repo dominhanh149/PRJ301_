@@ -163,7 +163,37 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
 
     @Override
     public void delete(ProductPlan model) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            connection.setAutoCommit(false);
+
+            // Delete from PlanHeaders first
+            String sql_delete_headers = "DELETE FROM [PlanHeaders] WHERE [plid] = ?";
+            PreparedStatement stm_delete_headers = connection.prepareStatement(sql_delete_headers);
+            stm_delete_headers.setInt(1, model.getId());
+            stm_delete_headers.executeUpdate();
+
+            // Delete from Plans
+            String sql_delete_plan = "DELETE FROM [Plans] WHERE [plid] = ?";
+            PreparedStatement stm_delete_plan = connection.prepareStatement(sql_delete_plan);
+            stm_delete_plan.setInt(1, model.getId());
+            stm_delete_plan.executeUpdate();
+
+            connection.commit();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductPlanDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                connection.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ProductPlanDBContext.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+                connection.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductPlanDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     @Override
