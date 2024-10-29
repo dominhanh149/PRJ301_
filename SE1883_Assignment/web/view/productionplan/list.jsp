@@ -50,15 +50,50 @@
             .product-list, .quantity-list {
                 line-height: 1.6;
             }
+            .button {
+                padding: 8px 16px;
+                border: none;
+                color: white;
+                cursor: pointer;
+                text-decoration: none;
+                border-radius: 4px;
+                font-size: 14px;
+                transition: background-color 0.3s ease;
+            }
+            .button-update {
+                background-color: #2196F3;
+            }
+            .button-update:hover {
+                background-color: #0b7dda;
+            }
+            .button-delete {
+                background-color: #f44336;
+                margin-left: 5px;
+            }
+            .button-delete:hover {
+                background-color: #d32f2f;
+            }
+            .create-button {
+                padding: 10px 20px;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                cursor: pointer;
+                border-radius: 4px;
+                font-size: 16px;
+                transition: background-color 0.3s ease;
+                text-decoration: none;
+            }
+            .create-button:hover {
+                background-color: #45a049;
+            }
         </style>
         <script>
             function redirectToCreatePlan() {
                 window.location.href = 'create';
             }
             function confirmDelete(planId) {
-                if (confirm("Are you sure you want to delete this plan?")) {
-                    window.location.href = 'deleteProductPlan?planId=' + planId;
-                }
+                return confirm("Are you sure you want to delete plan: ");
             }
         </script>
     </head>
@@ -72,40 +107,35 @@
                     <th>End</th>
                     <th>Product</th>
                     <th>Quantity Expected</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <c:forEach items="${requestScope.plans}" var="pl">
-                                <tr>
-                                    <td>
-                                        ${pl.name}
-                                    </td>
-                                    <td>${pl.start}</td>
-                                    <td>${pl.end}</td>
-                                    <td>
-                                        <c:forEach items="${pl.headers}" var="ph">
-                                            ${ph.product.name} </br>
-                                        </c:forEach>
-                                    </td>
-                                    
-                                    <td>
-                                        <c:forEach items="${pl.headers}" var="ph">
-                                            ${ph.quantity} </br>
-                                        </c:forEach>
-                                    </td>
-                                    <td>
-                                        <a href="update?plid=${pl.id}">Update</a>
-                                        <a href="delete?plid=${pl.id}" onclick="confirmDelete(${pl.id});">Delete</a>
-                                    </td>
-                                    
-                                </tr>
+                    <tr>
+                        <td>${pl.name}</td>
+                        <td>${pl.start}</td>
+                        <td>${pl.end}</td>
+                        <td>
+                            <c:forEach items="${pl.headers}" var="ph">
+                                ${ph.product.name} <br>
                             </c:forEach>
+                        </td>
+                        <td>
+                            <c:forEach items="${pl.headers}" var="ph">
+                                ${ph.quantity} <br>
+                            </c:forEach>
+                        </td>
+                        <td>
+                            <a href="update?plid=${pl.id}" class="button button-update">Update</a>
+                            <a href="delete?plid=${pl.id}" class="button button-delete" onclick=" return confirmDelete(${pl.id});">Delete</a>
+                        </td>
+                    </tr>
+                </c:forEach>
             </tbody>
         </table>
         <div style="text-align: center; margin-top: 20px;">
-            <button onclick="redirectToCreatePlan()" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">
-                    Create New Plan
-                </button>
+            <button onclick="redirectToCreatePlan()" class="create-button">Create New Plan</button>
         </div>
     </body>
 </html>
