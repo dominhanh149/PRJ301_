@@ -108,27 +108,47 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
             stm_update_plan.setInt(5, model.getId());
             stm_update_plan.executeUpdate();
 
-            // Update or insert headers
+//            // Update or insert headers
+//            String sql_update_header = "UPDATE [PlanHeaders] SET [quantity] = ?, [estimatedeffort] = ? WHERE [plid] = ? AND [pid] = ?";
+//            for (ProductPlanHeader header : model.getHeaders()) {
+//                PreparedStatement stm_update_header = connection.prepareStatement(sql_update_header);
+//                stm_update_header.setInt(1, header.getQuantity());
+//                stm_update_header.setFloat(2, header.getEstimatedeffort());
+//                stm_update_header.setInt(3, model.getId());
+//                stm_update_header.setInt(4, header.getProduct().getId());
+//
+//                // Execute the update
+//                int rowsAffected = stm_update_header.executeUpdate();
+//
+//                // If no rows were updated, insert the header
+//                if (rowsAffected == 0) {
+//                    String sql_insert_header = "INSERT INTO [PlanHeaders] ([plid], [pid], [quantity], [estimatedeffort]) VALUES (?, ?, ?, ?)";
+//                    PreparedStatement stm_insert_header = connection.prepareStatement(sql_insert_header);
+//                    stm_insert_header.setInt(1, model.getId());
+//                    stm_insert_header.setInt(2, header.getProduct().getId());
+//                    stm_insert_header.setInt(3, header.getQuantity());
+//                    stm_insert_header.setFloat(4, header.getEstimatedeffort());
+//                    stm_insert_header.executeUpdate();
+//                }
+//            }
+            String sql_delete_header = "DELETE FROM [PlanHeaders] WHERE [plid] = ? AND [pid] = ?";
             String sql_update_header = "UPDATE [PlanHeaders] SET [quantity] = ?, [estimatedeffort] = ? WHERE [plid] = ? AND [pid] = ?";
+
             for (ProductPlanHeader header : model.getHeaders()) {
-                PreparedStatement stm_update_header = connection.prepareStatement(sql_update_header);
-                stm_update_header.setInt(1, header.getQuantity());
-                stm_update_header.setFloat(2, header.getEstimatedeffort());
-                stm_update_header.setInt(3, model.getId());
-                stm_update_header.setInt(4, header.getProduct().getId());
-
-                // Execute the update
-                int rowsAffected = stm_update_header.executeUpdate();
-
-                // If no rows were updated, insert the header
-                if (rowsAffected == 0) {
-                    String sql_insert_header = "INSERT INTO [PlanHeaders] ([plid], [pid], [quantity], [estimatedeffort]) VALUES (?, ?, ?, ?)";
-                    PreparedStatement stm_insert_header = connection.prepareStatement(sql_insert_header);
-                    stm_insert_header.setInt(1, model.getId());
-                    stm_insert_header.setInt(2, header.getProduct().getId());
-                    stm_insert_header.setInt(3, header.getQuantity());
-                    stm_insert_header.setFloat(4, header.getEstimatedeffort());
-                    stm_insert_header.executeUpdate();
+                if (header.getQuantity() == 0 && header.getEstimatedeffort() == 0) {
+                    // Xóa header nếu quantity và estimatedEffort đều là 0
+                    PreparedStatement stm_delete_header = connection.prepareStatement(sql_delete_header);
+                    stm_delete_header.setInt(1, model.getId());
+                    stm_delete_header.setInt(2, header.getProduct().getId());
+                    stm_delete_header.executeUpdate();
+                } else {
+                    // Cập nhật header nếu quantity và estimatedEffort > 0
+                    PreparedStatement stm_update_header = connection.prepareStatement(sql_update_header);
+                    stm_update_header.setInt(1, header.getQuantity());
+                    stm_update_header.setFloat(2, header.getEstimatedeffort());
+                    stm_update_header.setInt(3, model.getId());
+                    stm_update_header.setInt(4, header.getProduct().getId());
+                    stm_update_header.executeUpdate();
                 }
             }
 

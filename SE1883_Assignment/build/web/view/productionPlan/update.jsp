@@ -77,24 +77,24 @@
         </style>
     </head>
     <body>
-        <button onclick="window.location.href='list'" style="position: absolute; top: 20px; left: 20px; background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Back</button>
-        
+        <button onclick="window.location.href = 'list'" style="position: absolute; top: 20px; left: 20px; background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Back</button>
+
         <h1>Update Production Plan</h1>
-        
+
         <form id="updatePlanForm" action="update" method="POST">
             <input type="hidden" name="plid" value="${requestScope.plan.id}" />
             <!-- Plan Name -->
             <label for="name">Plan Name:</label>
             <input type="text" id="name" name="name" value="${requestScope.plan.name}" required/> <br/>
-            
+
             <!-- Start Date -->
             <label for="from">From:</label>
             <input type="date" id="from" name="from" value="${requestScope.plan.start}" required/>
-            
+
             <!-- End Date -->
             <label for="to">To:</label>
             <input type="date" id="to" name="to" value="${requestScope.plan.end}" required/> <br/>
-            
+
             <!-- Department Selection -->
             <label for="did">Workshop:</label>
             <select id="did" name="did" required>
@@ -102,7 +102,7 @@
                     <option value="${d.id}" ${d.id eq requestScope.plan.dept.id ? "selected" : ""}>${d.name}</option>
                 </c:forEach>
             </select>
-            
+
             <!-- Product Headers -->
             <table border="1px">
                 <thead>
@@ -114,16 +114,22 @@
                 </thead>
                 <tbody>
                     <c:forEach items="${requestScope.products}" var="p" varStatus="status">
-                                    <c:set value="${requestScope.plan.headers}" var="h"/>
-                                        <tr>
-                                            <td>${p.name}<input type="hidden" name="pid" value="${p.id}"></td>
-                                            <td><input type="text" name="quantity${p.id}" value="${h[status.index].quantity}"/></td>
-                                            <td><input type="text" name="effort${p.id}" value="${h[status.index].estimatedeffort}"/></td>
-                                        </tr>   
-                                </c:forEach>
+                        <c:set value="${requestScope.plan.headers}" var="h"/>
+                        
+                        <tr>
+                            <td>${p.name}<input type="hidden" name="pid" value="${p.id}"></td>
+                                           
+                            <td>
+                                <input type="text" name="quantity${p.id}" value="${h[status.index].quantity != null ? h[status.index].quantity : ''}" />
+                            </td>
+                            <td>
+                                <input type="text" name="effort${p.id}" value="${h[status.index].estimatedeffort != null ? h[status.index].estimatedeffort : ''}" />
+                            </td>
+                        </tr>   
+                    </c:forEach>
                 </tbody>
             </table>
-            
+
             <!-- Submit Button -->
             <button type="submit" style="width: 100%; background-color: #4CAF50; color: white; padding: 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Save</button>
         </form>
