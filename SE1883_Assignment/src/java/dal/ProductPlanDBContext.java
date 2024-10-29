@@ -98,7 +98,7 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
         try {
             connection.setAutoCommit(false);
 
-            // Update the main Plan record
+            // Cập nhật thông tin chính của Plan
             String sql_update_plan = "UPDATE [Plans] SET [plname] = ?, [startdate] = ?, [enddate] = ?, [did] = ? WHERE [plid] = ?";
             PreparedStatement stm_update_plan = connection.prepareStatement(sql_update_plan);
             stm_update_plan.setString(1, model.getName());
@@ -108,31 +108,10 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
             stm_update_plan.setInt(5, model.getId());
             stm_update_plan.executeUpdate();
 
-//            // Update or insert headers
-//            String sql_update_header = "UPDATE [PlanHeaders] SET [quantity] = ?, [estimatedeffort] = ? WHERE [plid] = ? AND [pid] = ?";
-//            for (ProductPlanHeader header : model.getHeaders()) {
-//                PreparedStatement stm_update_header = connection.prepareStatement(sql_update_header);
-//                stm_update_header.setInt(1, header.getQuantity());
-//                stm_update_header.setFloat(2, header.getEstimatedeffort());
-//                stm_update_header.setInt(3, model.getId());
-//                stm_update_header.setInt(4, header.getProduct().getId());
-//
-//                // Execute the update
-//                int rowsAffected = stm_update_header.executeUpdate();
-//
-//                // If no rows were updated, insert the header
-//                if (rowsAffected == 0) {
-//                    String sql_insert_header = "INSERT INTO [PlanHeaders] ([plid], [pid], [quantity], [estimatedeffort]) VALUES (?, ?, ?, ?)";
-//                    PreparedStatement stm_insert_header = connection.prepareStatement(sql_insert_header);
-//                    stm_insert_header.setInt(1, model.getId());
-//                    stm_insert_header.setInt(2, header.getProduct().getId());
-//                    stm_insert_header.setInt(3, header.getQuantity());
-//                    stm_insert_header.setFloat(4, header.getEstimatedeffort());
-//                    stm_insert_header.executeUpdate();
-//                }
-//            }
+            // Câu lệnh để xóa các ProductPlanHeader có quantity và estimatedEffort đều là 0
             String sql_delete_header = "DELETE FROM [PlanHeaders] WHERE [plid] = ? AND [pid] = ?";
-            String sql_update_header = "UPDATE [PlanHeaders] SET [quantity] = ?, [estimatedeffort] = ? WHERE [plid] = ? AND [pid] = ?";
+            String sql_update_header = "UPDATE [PlanHeaders] SET quantity = ?, estimatedeffort = ? WHERE plid = ? AND pid = ?";
+            String sql_insert_header = "INSERT INTO [PlanHeaders] (plid, pid, quantity, estimatedeffort) VALUES (?, ?, ?, ?)";
 
             for (ProductPlanHeader header : model.getHeaders()) {
                 if (header.getQuantity() == 0 && header.getEstimatedeffort() == 0) {
@@ -148,7 +127,19 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
                     stm_update_header.setFloat(2, header.getEstimatedeffort());
                     stm_update_header.setInt(3, model.getId());
                     stm_update_header.setInt(4, header.getProduct().getId());
-                    stm_update_header.executeUpdate();
+
+                    // Kiểm tra xem cập nhật có ảnh hưởng đến bản ghi nào không
+                    int rowsAffected = stm_update_header.executeUpdate();
+
+                    // Nếu không có bản ghi nào bị ảnh hưởng, tức là bản ghi chưa tồn tại, thì thực hiện insert
+                    if (rowsAffected == 0) {
+                        PreparedStatement stm_insert_header = connection.prepareStatement(sql_insert_header);
+                        stm_insert_header.setInt(1, model.getId());
+                        stm_insert_header.setInt(2, header.getProduct().getId());
+                        stm_insert_header.setInt(3, header.getQuantity());
+                        stm_insert_header.setFloat(4, header.getEstimatedeffort());
+                        stm_insert_header.executeUpdate();
+                    }
                 }
             }
 
