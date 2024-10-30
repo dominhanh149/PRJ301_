@@ -2,7 +2,7 @@
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
     <servlet>
         <servlet-name>ProductionPlanCreateController</servlet-name>
-        <servlet-class>controller.manage.ProductionPlanCreateController</servlet-class>
+        <servlet-class>controller.plan.ProductionPlanCreateController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LoginController</servlet-name>
@@ -10,15 +10,35 @@
     </servlet>
     <servlet>
         <servlet-name>ProductionPlanListController</servlet-name>
-        <servlet-class>controller.manage.ProductionPlanListController</servlet-class>
+        <servlet-class>controller.plan.ProductionPlanListController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ProductionPlanDeleteController</servlet-name>
-        <servlet-class>controller.manage.ProductionPlanDeleteController</servlet-class>
+        <servlet-class>controller.plan.ProductionPlanDeleteController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ProductionPlanUpdate</servlet-name>
-        <servlet-class>controller.manage.ProductionPlanUpdate</servlet-class>
+        <servlet-class>controller.plan.ProductionPlanUpdate</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EmployeeCreateController</servlet-name>
+        <servlet-class>controller.employee.EmployeeCreateController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EmployeeListController</servlet-name>
+        <servlet-class>controller.employee.EmployeeListController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EmployeeUpdateController</servlet-name>
+        <servlet-class>controller.employee.EmployeeUpdateController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EmployeeDeleteController</servlet-name>
+        <servlet-class>controller.employee.EmployeeDeleteController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EmployeeFilterController</servlet-name>
+        <servlet-class>controller.employee.EmployeeFilterController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ProductionPlanCreateController</servlet-name>
@@ -39,5 +59,25 @@
     <servlet-mapping>
         <servlet-name>ProductionPlanUpdate</servlet-name>
         <url-pattern>/productionPlan/update</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EmployeeCreateController</servlet-name>
+        <url-pattern>/employee/create</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EmployeeListController</servlet-name>
+        <url-pattern>/employee/list</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EmployeeUpdateController</servlet-name>
+        <url-pattern>/employee/update</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EmployeeDeleteController</servlet-name>
+        <url-pattern>/employee/delete</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EmployeeFilterController</servlet-name>
+        <url-pattern>/employee/filter</url-pattern>
     </servlet-mapping>
 </web-app>
