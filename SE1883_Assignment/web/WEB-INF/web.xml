@@ -40,6 +40,18 @@
         <servlet-name>EmployeeFilterController</servlet-name>
         <servlet-class>controller.employee.EmployeeFilterController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PlanDetailList</servlet-name>
+        <servlet-class>controller.detail.PlanDetailList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PlanDetailCreate</servlet-name>
+        <servlet-class>controller.detail.PlanDetailCreate</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PlanDetailUpdate</servlet-name>
+        <servlet-class>controller.detail.PlanDetailUpdate</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ProductionPlanCreateController</servlet-name>
         <url-pattern>/productionPlan/create</url-pattern>
@@ -79,5 +91,17 @@
     <servlet-mapping>
         <servlet-name>EmployeeFilterController</servlet-name>
         <url-pattern>/employee/filter</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PlanDetailList</servlet-name>
+        <url-pattern>/planDetail/list</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PlanDetailCreate</servlet-name>
+        <url-pattern>/planDetail/create</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PlanDetailUpdate</servlet-name>
+        <url-pattern>/planDetail/update</url-pattern>
     </servlet-mapping>
 </web-app>

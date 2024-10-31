@@ -4,6 +4,8 @@
  */
 package model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author admin
@@ -14,6 +16,16 @@ public class ProductPlanHeader {
     private Product product;
     private int quantity;
     private float estimatedeffort;
+    private ArrayList<ProductPlanDetail> details = new ArrayList<>();
+
+    public ArrayList<ProductPlanDetail> getDetails() {
+        return details;
+    }
+
+    public void setDetails(ArrayList<ProductPlanDetail> details) {
+        this.details = details;
+    }
+    
 
     public int getId() {
         return id;

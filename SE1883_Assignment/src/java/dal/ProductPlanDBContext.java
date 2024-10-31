@@ -13,7 +13,9 @@ import java.util.logging.Logger;
 import model.Department;
 import model.Product;
 import model.ProductPlan;
+import model.ProductPlanDetail;
 import model.ProductPlanHeader;
+import model.Shift;
 
 /**
  *
@@ -275,7 +277,87 @@ public class ProductPlanDBContext extends DBContext<ProductPlan> {
 
     @Override
     public ProductPlan get(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        ProductPlan plan = null;
+        try {
+            String sql = "SELECT p.plid, p.plname, p.startdate, p.enddate, "
+                    + "ph.phid, prd.pname, ph.estimatedeffort, "
+                    + "pd.date, pd.quantity, s.sname "
+                    + "FROM Plans p "
+                    + "LEFT JOIN PlanHeaders ph ON p.plid = ph.plid "
+                    + "LEFT JOIN PlanDetails pd ON ph.phid = pd.phid "
+                    + "LEFT JOIN Products prd ON prd.pid = ph.pid "
+                    + "LEFT JOIN Shifts s ON pd.sid = s.sid "
+                    + "WHERE p.plid = ?";
+
+            try (PreparedStatement stm = connection.prepareStatement(sql)) {
+                stm.setInt(1, id);
+
+                try (ResultSet rs = stm.executeQuery()) {
+                    while (rs.next()) {
+                        if (plan == null) {
+                            // Khởi tạo ProductPlan và thiết lập các thuộc tính cơ bản
+                            plan = new ProductPlan();
+                            plan.setId(rs.getInt("plid"));
+                            plan.setName(rs.getString("plname"));
+                            plan.setStart(rs.getDate("startdate"));
+                            plan.setEnd(rs.getDate("enddate"));
+
+                            // Khởi tạo danh sách headers cho kế hoạch
+                            plan.setHeaders(new ArrayList<>());
+                        }
+
+                        // Tạo ProductPlanHeader nếu có
+                        int phid = rs.getInt("phid");
+                        if (phid != 0) {
+                            ProductPlanHeader header = new ProductPlanHeader();
+                            header.setId(phid);
+                            header.setEstimatedeffort(rs.getFloat("estimatedeffort"));
+
+                            // Tạo Product và gán vào header
+                            Product product = new Product();
+                            product.setName(rs.getString("pname"));
+                            header.setProduct(product);
+
+                            // Khởi tạo danh sách chi tiết cho header nếu chưa tồn tại
+                            if (header.getDetails() == null) {
+                                header.setDetails(new ArrayList<>());
+                            }
+
+                            // Tạo ProductPlanDetail
+                            ProductPlanDetail detail = new ProductPlanDetail();
+                            detail.setDate(rs.getDate("date"));
+                            detail.setQuantity(rs.getInt("quantity"));
+
+                            // Tạo Shift và gán vào detail
+                            Shift shift = new Shift();
+                            shift.setSname(rs.getString("sname"));
+                            detail.setShift(shift);
+
+                            // Thêm detail vào header
+                            header.getDetails().add(detail);
+
+                            // Kiểm tra nếu header chưa tồn tại trong danh sách headers
+                            if (!plan.getHeaders().contains(header)) {
+                                plan.getHeaders().add(header);
+                            } else {
+                                // Nếu header đã tồn tại, chỉ thêm detail vào header đó
+                                int index = plan.getHeaders().indexOf(header);
+                                plan.getHeaders().get(index).getDetails().add(detail);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductPlanDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductPlanDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return plan;
     }
 
 }
