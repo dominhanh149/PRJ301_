@@ -67,6 +67,22 @@
             input[type="hidden"] {
                 display: none;
             }
+            .create-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .create-button:hover {
+            background-color: #45a049;
+        }
         </style>
     </head>
     <body>
@@ -96,6 +112,6 @@
                 </c:forEach>
             </tbody>
         </table>
-        
+        <a href="create?plid=${plan.id}" class="create-button">Create New Detail</a>
     </body>
 </html>

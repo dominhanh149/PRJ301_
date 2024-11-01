@@ -18,6 +18,38 @@ import model.Shift;
  */
 public class PlanDetailDBContext extends DBContext<ProductPlanDetail> {
 
+    public ArrayList<ProductPlanHeader> getHeadersByPlanId(int plid) {
+        ArrayList<ProductPlanHeader> headers = new ArrayList<>();
+        String sql = "SELECT ph.phid, ph.plid, ph.pid, ph.quantity, ph.estimatedeffort, p.pname " +
+                     "FROM PlanHeaders ph " +
+                     "JOIN Products p ON ph.pid = p.pid " +
+                     "WHERE ph.plid = ?";
+        
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setInt(1, plid);
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    ProductPlanHeader header = new ProductPlanHeader();
+                    header.setId(rs.getInt("phid")); // ID của PlanHeader
+                    header.setEstimatedeffort(rs.getFloat("estimatedeffort")); // Estimated effort
+                    header.setQuantity(rs.getInt("quantity")); // Quantity từ PlanHeader
+                    
+                    // Tạo và gán sản phẩm cho header
+                    Product product = new Product();
+                    product.setId(rs.getInt("pid")); // Lấy ID sản phẩm
+                    product.setName(rs.getString("pname")); // Lấy tên sản phẩm
+                    header.setProduct(product);
+                    
+                    headers.add(header);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return headers;
+    
+    }
+    
     public ArrayList<ProductPlanDetail> getDetailsByPlanId(int planId) {
         ArrayList<ProductPlanDetail> details = new ArrayList<>();
 
@@ -77,12 +109,28 @@ public class PlanDetailDBContext extends DBContext<ProductPlanDetail> {
 
     @Override
     public void insert(ProductPlanDetail model) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql = "INSERT INTO PlanDetails (phid, sid, date, quantity) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setInt(1, model.getHeader().getId()); // phid từ header
+            stm.setInt(2, model.getShift().getSid());  // sid từ shift
+            stm.setDate(3, model.getDate());
+            stm.setInt(4, model.getQuantity());
+            stm.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
     public void update(ProductPlanDetail model) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql = "UPDATE PlanDetails SET quantity = ? WHERE pdid = ?";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setInt(1, model.getQuantity()); // Đặt giá trị mới cho quantity
+            stm.setInt(2, model.getId());        // Sử dụng pdid để xác định bản ghi cần cập nhật
+            stm.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override

@@ -20,7 +20,7 @@ import model.ProductPlanHeader;
  * @author admin
  */
 public class ProductPlanHeaderDBContext extends DBContext<ProductPlanHeader>{
-
+    
     @Override
     public void insert(ProductPlanHeader model) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
