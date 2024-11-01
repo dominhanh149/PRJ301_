@@ -5,6 +5,7 @@
 package controller.detail;
 
 import controller.auth.BaseRBACController;
+import dal.PlanDetailDBContext;
 import dal.ProductPlanDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import model.ProductPlan;
+import model.ProductPlanDetail;
+import model.ProductPlanHeader;
+import model.Shift;
 import model.User;
 
 /**
@@ -26,28 +30,21 @@ public class PlanDetailList extends BaseRBACController {
 
     @Override
     protected void doAuthorizedGet(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
-/// Lấy planId từ request parameter
+ // Lấy planId từ tham số request
         int planId = Integer.parseInt(req.getParameter("plid"));
-
-        // Lấy dữ liệu từ database bằng ProductionPlanDBContext
-        ProductPlanDBContext db = new ProductPlanDBContext();
-        ProductPlan plan = db.get(planId);
-
-        // Tạo danh sách ngày từ startdate đến enddate
-        ArrayList<Date> scheduleDates = new ArrayList<>();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(plan.getStart());
-        while (!calendar.getTime().after(plan.getEnd())) {
-            scheduleDates.add(calendar.getTime());
-            calendar.add(Calendar.DATE, 1);
-        }
-
-        // Đưa dữ liệu vào request scope để sử dụng trong JSP
+  
+        // Sử dụng DAO để lấy danh sách chi tiết của kế hoạch sản xuất
+        ProductPlanDBContext pdb = new ProductPlanDBContext();
+        ProductPlan plan = pdb.get(planId);
+        PlanDetailDBContext pddb = new PlanDetailDBContext();
+        ArrayList<ProductPlanDetail> details = pddb.getDetailsByPlanId(planId);
+        
+        
+        // Đưa danh sách chi tiết vào request scope
+        req.setAttribute("details", details);
         req.setAttribute("plan", plan);
-        req.setAttribute("scheduleDates", scheduleDates);
-
         // Chuyển tiếp yêu cầu tới trang JSP để hiển thị dữ liệu
-        req.getRequestDispatcher("/view/planDetail/list.jsp").forward(req, resp);
+        req.getRequestDispatcher("../view/productionPlan/listdetail.jsp").forward(req, resp);
     }
 
     @Override

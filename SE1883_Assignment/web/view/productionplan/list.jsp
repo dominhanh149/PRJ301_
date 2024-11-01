@@ -113,7 +113,7 @@
             <tbody>
                 <c:forEach items="${requestScope.plans}" var="pl">
                     <tr>
-                        <td>${pl.name}</td>
+                        <td><a href="../planDetail/list?plid=${pl.id}">${pl.name}</a></td>
                         <td>${pl.start}</td>
                         <td>${pl.end}</td>
                         <td>
