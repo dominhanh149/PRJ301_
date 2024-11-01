@@ -7,6 +7,7 @@ package dal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import model.Product;
 import model.ProductPlanDetail;
 import model.ProductPlanHeader;
@@ -20,26 +21,21 @@ public class PlanDetailDBContext extends DBContext<ProductPlanDetail> {
 
     public ArrayList<ProductPlanHeader> getHeadersByPlanId(int plid) {
         ArrayList<ProductPlanHeader> headers = new ArrayList<>();
-        String sql = "SELECT ph.phid, ph.plid, ph.pid, ph.quantity, ph.estimatedeffort, p.pname " +
-                     "FROM PlanHeaders ph " +
-                     "JOIN Products p ON ph.pid = p.pid " +
-                     "WHERE ph.plid = ?";
-        
+        String sql = "SELECT ph.phid, ph.plid, ph.pid, ph.quantity, p.pname "
+                + "FROM PlanHeaders ph "
+                + "JOIN Products p ON ph.pid = p.pid "
+                + "WHERE ph.plid = ?";
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             stm.setInt(1, plid);
             try (ResultSet rs = stm.executeQuery()) {
                 while (rs.next()) {
                     ProductPlanHeader header = new ProductPlanHeader();
-                    header.setId(rs.getInt("phid")); // ID của PlanHeader
-                    header.setEstimatedeffort(rs.getFloat("estimatedeffort")); // Estimated effort
-                    header.setQuantity(rs.getInt("quantity")); // Quantity từ PlanHeader
-                    
-                    // Tạo và gán sản phẩm cho header
+                    header.setId(rs.getInt("phid"));
+                    header.setQuantity(rs.getInt("quantity")); // Lấy số lượng
                     Product product = new Product();
-                    product.setId(rs.getInt("pid")); // Lấy ID sản phẩm
+                    product.setId(rs.getInt("pid"));
                     product.setName(rs.getString("pname")); // Lấy tên sản phẩm
-                    header.setProduct(product);
-                    
+                    header.setProduct(product); // Gán sản phẩm vào header
                     headers.add(header);
                 }
             }
@@ -47,9 +43,8 @@ public class PlanDetailDBContext extends DBContext<ProductPlanDetail> {
             ex.printStackTrace();
         }
         return headers;
-    
     }
-    
+
     public ArrayList<ProductPlanDetail> getDetailsByPlanId(int planId) {
         ArrayList<ProductPlanDetail> details = new ArrayList<>();
 

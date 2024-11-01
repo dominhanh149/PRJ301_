@@ -28,7 +28,7 @@ public class LoginController extends HttpServlet {
         User user = udb.get(username, password);
         if(user != null){
             req.getSession().setAttribute("account", user);
-            resp.sendRedirect("productionPlan/list");
+            resp.sendRedirect("../view/dashboard/home");
         }else{
             resp.getWriter().println("Login fail!!");
         }
