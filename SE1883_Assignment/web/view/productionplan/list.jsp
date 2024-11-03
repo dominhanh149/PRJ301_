@@ -3,7 +3,7 @@
     Created on : Oct 27, 2024, 12:11:05 AM
     Author     : admin
 --%>
-
+<%@ taglib prefix="mytag" uri="/WEB-INF/tlds/customtags.tld" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -133,8 +133,8 @@
                 <c:forEach items="${requestScope.plans}" var="pl">
                     <tr>
                         <td><a href="../planDetail/list?plid=${pl.id}">${pl.name}</a></td>
-                        <td>${pl.start}</td>
-                        <td>${pl.end}</td>
+                        <td><mytag:ToVietnameseDate value="${pl.start}" /></td>
+                        <td><mytag:ToVietnameseDate value="${pl.end}" /></td>
                         <td>
                             <c:forEach items="${pl.headers}" var="ph">
                                 ${ph.product.name} <br>

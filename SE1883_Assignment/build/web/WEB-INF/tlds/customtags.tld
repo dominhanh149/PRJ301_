@@ -5,11 +5,11 @@
         version="2.0">
     <tlib-version>1.0</tlib-version>
     <short-name>mytag</short-name>
-    <uri>/WEB-INF/tags/customtags</uri>
+    <uri>/WEB-INF/tlds/customtags</uri>
 
     <tag>
-        <name>DateTag</name>
-        <tag-class>customtags.DateTag</tag-class>
+        <name>ToVietnameseDate</name>
+        <tag-class>controller.tag.DateTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <name>value</name>

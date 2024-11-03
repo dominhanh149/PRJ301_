@@ -25,6 +25,9 @@ public class DateTag extends SimpleTagSupport {
 
     @Override
     public void doTag() throws JspException, IOException {
+        String url = "jdbc:sqlserver://localhost\\SQLEXPRESS:1433;databaseName=ProductionSchedulingSystem;trustServerCertificate=true;";
+        String user = "hayden";
+        String password = "1234";
         if (value != null) {
             SimpleDateFormat formatter = new SimpleDateFormat("dd 'thang' MM 'nam' yyyy");
             String formattedDate = "ngay " + formatter.format(value);
