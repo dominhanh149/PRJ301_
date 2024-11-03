@@ -52,6 +52,10 @@
         <servlet-name>PlanDetailUpdate</servlet-name>
         <servlet-class>controller.detail.PlanDetailUpdate</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>HomeController</servlet-name>
+        <servlet-class>controller.home.HomeController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ProductionPlanCreateController</servlet-name>
         <url-pattern>/productionPlan/create</url-pattern>
@@ -103,5 +107,9 @@
     <servlet-mapping>
         <servlet-name>PlanDetailUpdate</servlet-name>
         <url-pattern>/planDetail/update</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HomeController</servlet-name>
+        <url-pattern>/home</url-pattern>
     </servlet-mapping>
 </web-app>

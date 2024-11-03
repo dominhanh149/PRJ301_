@@ -87,6 +87,22 @@
             .create-button:hover {
                 background-color: #45a049;
             }
+            .back-button {
+                display: block;
+                margin-bottom: 20px;
+                text-align: left;
+            }
+            .back-button a {
+                padding: 10px 15px;
+                background-color: #4CAF50;
+                color: white;
+                text-decoration: none;
+                border-radius: 4px;
+                font-size: 14px;
+            }
+            .back-button a:hover {
+                background-color: #45a049;
+            }
         </style>
         <script>
             function redirectToCreatePlan() {
@@ -98,6 +114,9 @@
         </script>
     </head>
     <body>
+        <div class="back-button">
+            <a href="../home">&larr; Back to Home</a>
+        </div>
         <h1>Production Plan List</h1>
         <table border="1" cellspacing="0" cellpadding="5">
             <thead>

@@ -59,8 +59,8 @@
 
     <nav>
         <a href="#home">Home</a>
-        <a href="#worker-management">Worker Management</a>
-        <a href="#production-planning">Production Planning Management</a>
+        <a href="employee/list">Worker Management</a>
+        <a href="productionPlan/list">Production Planning Management</a>
         <a href="#accounting">Accounting</a>
         <a href="#reports">Reports</a>
     </nav>
