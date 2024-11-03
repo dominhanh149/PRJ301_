@@ -105,6 +105,23 @@
             .back-button a:hover {
                 background-color: #45a049;
             }
+            .create-button {
+                display: block;
+                margin: 20px auto;
+                padding: 15px 30px;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                font-size: 16px;
+                cursor: pointer;
+                text-align: center;
+                text-decoration: none;
+                transition: background-color 0.3s ease;
+            }
+            .create-button:hover {
+                background-color: #45a049;
+            }
         </style>
         <script>
             function removeEmployee(id) {
@@ -113,13 +130,16 @@
                     document.getElementById("formRemove" + id).submit();
                 }
             }
+            function redirectToCreatePlan() {
+                window.location.href = 'create';
+            }
         </script>
     </head>
     <body>
         <div class="back-button">
             <a href="../home">&larr; Back to Home</a>
         </div>
-        <h1>Employee List with Filter</h1>
+        <h1>Employee List</h1>
 
         <!-- Filter Form -->
         <form action="filter" method="GET"> 
@@ -170,11 +190,14 @@
                         <td class="action-buttons">
                             <a href="update?id=${e.id}">Edit</a>
                             <input type="button" value="Remove" onclick="removeEmployee(${e.id})"/>
-                            
+
                         </td>
                     </tr>
                 </c:forEach>
             </tbody>
         </table>
+        <div>
+            <button onclick="redirectToCreatePlan()" class="create-button">Create New Plan</button>
+        </div>
     </body>
 </html>

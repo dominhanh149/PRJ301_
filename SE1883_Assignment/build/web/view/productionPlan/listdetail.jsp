@@ -83,10 +83,28 @@
         .create-button:hover {
             background-color: #45a049;
         }
+        .back-button {
+                display: block;
+                margin-bottom: 20px;
+                text-align: left;
+            }
+            .back-button a {
+                padding: 10px 15px;
+                background-color: #4CAF50;
+                color: white;
+                text-decoration: none;
+                border-radius: 4px;
+                font-size: 14px;
+            }
+            .back-button a:hover {
+                background-color: #45a049;
+            }
         </style>
     </head>
     <body>
-
+        <div class="back-button">
+            <a href="../productionPlan/list">&larr; Back</a>
+        </div>
         <h1>${requestScope.plan.name}</h1>
         
         <table>
