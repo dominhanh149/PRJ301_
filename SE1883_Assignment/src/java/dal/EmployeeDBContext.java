@@ -92,18 +92,16 @@ public class EmployeeDBContext extends DBContext<Employee> {
         String sql_insert = ""
                 + "INSERT INTO [Employees]\n"
                 + "           ([ename]\n"
-                + "           ,[did])\n"
+                + "           ,[did]\n"
                 + "           ,[phonenumber]\n"
-                + "           ,[address]\n"
+                + "           ,[address])\n"
                 + "     VALUES\n"
                 + "           (?\n"
                 + "           ,?\n"
                 + "           ,?\n"
                 + "           ,?)\n";
-        String sql_getEid = "SELECT @@IDENTITY as eid";
 
         PreparedStatement stm_insert = null;
-        PreparedStatement stm_getEid = null;
 
         try {
             connection.setAutoCommit(false);
@@ -115,10 +113,9 @@ public class EmployeeDBContext extends DBContext<Employee> {
 
             stm_insert.executeUpdate();
 
-            stm_getEid = connection.prepareStatement(sql_getEid);
-            ResultSet rs = stm_getEid.executeQuery();
+            ResultSet rs = stm_insert.getGeneratedKeys();
             if (rs.next()) {
-                model.setId(rs.getInt("eid"));
+                model.setId(rs.getInt(1));
             }
             connection.commit();
         } catch (SQLException ex) {
@@ -130,13 +127,10 @@ public class EmployeeDBContext extends DBContext<Employee> {
             }
         } finally {
             try {
+                if (stm_insert != null) {
+                    stm_insert.close();
+                }
                 connection.setAutoCommit(true);
-            } catch (SQLException ex) {
-                Logger.getLogger(EmployeeDBContext.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            try {
-                connection.close();
             } catch (SQLException ex) {
                 Logger.getLogger(EmployeeDBContext.class.getName()).log(Level.SEVERE, null, ex);
             }

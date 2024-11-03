@@ -147,13 +147,13 @@
             <input type="text" id="id" name="id" value="${param.id}"/> <br/>
 
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name" value="${param.name}" required/> <br/>
+            <input type="text" id="name" name="name" value="${param.name}" /> <br/>
 
             <label for="phonenumber">Phone Number:</label>
-            <input type="text" id="phonenumber" name="phonenumber" value="${param.phonenumber}" required/> <br/>
+            <input type="text" id="phonenumber" name="phonenumber" value="${param.phonenumber}" /> <br/>
 
             <label for="address">Address:</label>
-            <input type="text" id="address" name="address" value="${param.address}" required/> <br/>
+            <input type="text" id="address" name="address" value="${param.address}" /> <br/>
 
             <label for="did">Department:</label>
             <select id="did" name="did">

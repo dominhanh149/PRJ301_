@@ -57,6 +57,10 @@
             input[type="submit"]:hover {
                 background-color: #45a049;
             }
+            .error {
+                color: red;
+                margin-bottom: 10px;
+            }
         </style>
     </head>
     <body>
@@ -66,13 +70,25 @@
             <input type="hidden" name="id" value="${requestScope.e.id}"/>
 
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name" value="${requestScope.e.name}" required/> <br/>
+            <input type="text" id="name" name="name" value="${requestScope.e.name}" required/>
+            <c:if test="${not empty errName}">
+                <span class="error">${errName}</span>
+            </c:if>
+            <br/>
 
             <label for="phonenumber">Phone Number:</label>
-            <input type="text" id="phonenumber" name="phonenumber" value="${requestScope.e.phoneNumber}" required/> <br/>
+            <input type="text" id="phonenumber" name="phonenumber" value="${requestScope.e.phoneNumber}" required/>
+            <c:if test="${not empty errPhoneNumber}">
+                <span class="error">${errPhoneNumber}</span>
+            </c:if>
+            <br/>
 
             <label for="address">Address:</label>
-            <input type="text" id="address" name="address" value="${requestScope.e.address}" required/> <br/>
+            <input type="text" id="address" name="address" value="${requestScope.e.address}" required/>
+            <c:if test="${not empty errAddress}">
+                <span class="error">${errAddress}</span>
+            </c:if>
+            <br/>
 
             <label for="did">Department:</label>
             <select id="did" name="did" required>
@@ -82,7 +98,11 @@
                         value="${d.id}">${d.name}
                     </option>
                 </c:forEach>
-            </select> <br/>
+            </select>
+            <c:if test="${not empty errDid}">
+                <span class="error">${errDid}</span>
+            </c:if>
+            <br/>
 
             <input type="submit" value="Save"/>
         </form>

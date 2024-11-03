@@ -73,34 +73,38 @@
             input[type="submit"]:hover {
                 background-color: #45a049;
             }
-        </style>
-    <script>
-            function submitForm() {
-                const form = document.getElementById('createPlanForm');
-                form.submit();
-                form.addEventListener('submit', function (event) {
-                    event.preventDefault();
-                    window.location.href = 'list';
-                });
+            .error {
+                color: red;
+                margin-bottom: 10px;
             }
-        </script>
-
+        </style>
+    </head>
+    <body>
         <button onclick="window.location.href='list'" style="position: absolute; top: 20px; left: 20px; background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Back</button>
         <h1>Create Production Plan</h1>
-        <form id="createPlanForm" action="create" method="POST" onsubmit="submitForm(); return false;">
+        <form id="createPlanForm" action="create" method="POST">
+            <c:if test="${not empty errName}">
+                <div class="error">${errName}</div>
+            </c:if>
             <label for="name">Plan Name:</label>
-            <input type="text" id="name" name="name" required/> <br/>
+            <input type="text" id="name" name="name" value="${param.name}" required/> <br/>
             
+            <c:if test="${not empty errDate}">
+                <div class="error">${errDate}</div>
+            </c:if>
             <label for="from">From:</label>
-            <input type="date" id="from" name="from" required/>
+            <input type="date" id="from" name="from" value="${param.from}" required/>
             
             <label for="to">To:</label>
-            <input type="date" id="to" name="to" required/> <br/>
+            <input type="date" id="to" name="to" value="${param.to}" required/> <br/>
             
+            <c:if test="${not empty errDid}">
+                <div class="error">${errDid}</div>
+            </c:if>
             <label for="did">Workshop:</label>
             <select id="did" name="did" required>
                 <c:forEach items="${requestScope.depts}" var="d">
-                    <option value="${d.id}">${d.name}</option>
+                    <option value="${d.id}" ${param.did eq d.id ? "selected=\"selected\"" : ""}>${d.name}</option>
                 </c:forEach>
             </select>
             
@@ -116,14 +120,14 @@
                     <c:forEach items="${requestScope.products}" var="p">
                         <tr>
                             <td>${p.name}<input type="hidden" name="pid" value="${p.id}"></td>
-                            <td><input type="text" name="quantity${p.id}" required/></td>
-                            <td><input type="text" name="effort${p.id}" required/></td>
+                            <td><input type="text" name="quantity${p.id}" /></td>
+                            <td><input type="text" name="effort${p.id}" /></td>
                         </tr>
                     </c:forEach>
                 </tbody>
             </table>
             
-            <button type="button" onclick="submitForm()" style="width: 100%; background-color: #4CAF50; color: white; padding: 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Save</button>
+            <button type="submit" style="width: 100%; background-color: #4CAF50; color: white; padding: 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Save</button>
         </form>
     </body>
 </html>

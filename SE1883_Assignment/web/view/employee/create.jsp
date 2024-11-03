@@ -57,26 +57,57 @@
             input[type="submit"]:hover {
                 background-color: #45a049;
             }
+            .error {
+                color: red;
+                margin-bottom: 10px;
+            }
+            .success {
+                color: green;
+                text-align: center;
+                margin-bottom: 15px;
+            }
         </style>
     </head>
     <body>
         <h1>Create Employee</h1>
+
+        <!-- Display success message -->
+        <c:if test="${not empty successMessage}">
+            <p class="success">${successMessage}</p>
+        </c:if>
+
         <form action="create" method="POST">
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required/> <br/>
+            <input type="text" id="name" name="name" />
+            <c:if test="${not empty errName}">
+                <span class="error">${errName}</span>
+            </c:if>
+            <br/>
 
             <label for="phonenumber">Phone Number:</label>
-            <input type="text" id="phonenumber" name="phonenumber" required/> <br/>
+            <input type="text" id="phonenumber" name="phonenumber" />
+            <c:if test="${not empty errPhoneNumber}">
+                <span class="error">${errPhoneNumber}</span>
+            </c:if>
+            <br/>
 
             <label for="address">Address:</label>
-            <input type="text" id="address" name="address" required/> <br/>
+            <input type="text" id="address" name="address" />
+            <c:if test="${not empty errAddress}">
+                <span class="error">${errAddress}</span>
+            </c:if>
+            <br/>
 
             <label for="did">Department:</label>
             <select id="did" name="did" required>
                 <c:forEach items="${requestScope.depts}" var="d">
                     <option value="${d.id}">${d.name}</option>
                 </c:forEach>
-            </select> <br/>
+            </select>
+            <c:if test="${not empty errDid}">
+                <span class="error">${errDid}</span>
+            </c:if>
+            <br/>
 
             <input type="submit" value="Save"/>
         </form>

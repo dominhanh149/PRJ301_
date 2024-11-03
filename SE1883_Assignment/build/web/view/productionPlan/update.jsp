@@ -86,7 +86,9 @@
             <!-- Plan Name -->
             <label for="name">Plan Name:</label>
             <input type="text" id="name" name="name" value="${requestScope.plan.name}" required/> <br/>
-
+            <c:if test="${not empty errDate}">
+                <div class="error">${errDate}</div>
+            </c:if>
             <!-- Start Date -->
             <label for="from">From:</label>
             <input type="date" id="from" name="from" value="${requestScope.plan.start}" required/>
